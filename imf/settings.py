@@ -11,6 +11,9 @@ DOWNLOAD_HANDLERS = {
 
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 920000
+PLAYWRIGHT_BROWSER_SETTINGS = {
+    'headless': True,
+}
 
 
 # Obey robots.txt rules
