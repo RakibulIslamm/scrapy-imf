@@ -15,6 +15,9 @@ PLAYWRIGHT_BROWSER_SETTINGS = {
     'headless': True,
 }
 
+# PLAYWRIGHT_MAX_PAGES_PER_CONTEXT= 4
+# CLOSESPIDER_ITEMCOUNT= 2000
+
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
