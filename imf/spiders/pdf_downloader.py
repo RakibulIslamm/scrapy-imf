@@ -18,6 +18,7 @@ class PdfDownloaderSpider(scrapy.Spider):
     name = "pdf_downloader"
     num = None
     page_count = 0
+    total_pages = 0
     topics= ['Financial and monetary sector', 'Real sector', 'Fiscal sector', 'External sector', 'Fund operations', 'Cross-sector', 'Economic theory and methods', 'Fund structure and governance', 'Natural resources', 'Environmental policy', 'Environmental sustainability', 'All']
     custom_settings={
         "PLAYWRIGHT_ABORT_REQUEST" : should_abort_request,
@@ -34,6 +35,10 @@ class PdfDownloaderSpider(scrapy.Spider):
     @classmethod
     def set_page_count(cls, page_number):
         cls.page_count = page_number
+
+    @classmethod
+    def set_total_pages(cls, pages):
+        cls.total_pages = pages
 
     def start_requests(self):
         print('\n\n')
@@ -107,6 +112,7 @@ class PdfDownloaderSpider(scrapy.Spider):
         items_count = int(items.replace(',', ''))
         if(self.topics[int(self.num)-1] == 'All'):
             if items_count >= 1000:
+                self.set_total_pages(20)
                 for i in range(1, 20):
                     yield scrapy.Request(
                         url=f'https://www.imf.org/en/Publications/Search#first={i*50}&sort=relevancy&numberOfResults=50',
@@ -122,6 +128,7 @@ class PdfDownloaderSpider(scrapy.Spider):
                         dont_filter=True,
                     )
             elif(items_count < 1000 and items_count > 0):
+                self.set_total_pages(math.ceil(items_count/50))
                 for i in range(1, math.ceil(items_count/50)):
                     yield scrapy.Request(
                         url=f'https://www.imf.org/en/Publications/Search#first={i*50}&sort=relevancy&numberOfResults=50',
@@ -138,6 +145,7 @@ class PdfDownloaderSpider(scrapy.Spider):
                     )
         elif(int(self.num) < len(self.topics) and int(self.num) > 0 and self.topics[int(self.num)-1] != 'All'):
             if items_count >= 1000:
+                self.set_total_pages(20)
                 for i in range(1, 20):
                     yield scrapy.Request(
                         url=f'https://www.imf.org/en/Publications/Search#first={i*50}&sort=relevancy&numberOfResults=50&f:topic=[{self.topics[int(self.num)-1]}]',
@@ -153,6 +161,7 @@ class PdfDownloaderSpider(scrapy.Spider):
                         dont_filter=True,
                     )
             elif(items_count < 1000 and items_count > 0):
+                self.set_total_pages(math.ceil(items_count/50))
                 for i in range(1, math.ceil(items_count/50)):
                     yield scrapy.Request(
                         url=f'https://www.imf.org/en/Publications/Search#first={i*50}&sort=relevancy&numberOfResults=50&f:topic=[{self.topics[int(self.num)-1]}]',
@@ -187,6 +196,9 @@ class PdfDownloaderSpider(scrapy.Spider):
                 }
         self.set_page_count(self.page_count+1)
         print(f'Page {self.page_count}___(Scraped)')
+
+        if(self.page_count == self.total_pages):
+            print("Downloading pdf...")
 
 
 

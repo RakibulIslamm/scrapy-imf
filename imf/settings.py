@@ -15,15 +15,12 @@ PLAYWRIGHT_BROWSER_SETTINGS = {
     'headless': True,
 }
 
-# PLAYWRIGHT_MAX_PAGES_PER_CONTEXT= 4
-# CLOSESPIDER_ITEMCOUNT= 2000
 
+# ITEM_PIPELINES = {"scrapy.pipelines.files.FilesPipeline": 1}
+ITEM_PIPELINES = {"imf.pipelines.CustomFilePipelines": 1}
+FILES_STORE = "download"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 FEED_EXPORT_ENCODING = "utf-8"
-
-# ITEM_PIPELINES = {"scrapy.pipelines.files.FilesPipeline": 1}
-ITEM_PIPELINES = {"imf.pipelines.CustomFilePipelines": 1}
-FILES_STORE = "download"
